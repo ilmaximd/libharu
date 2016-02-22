@@ -36,7 +36,6 @@ HPDF_Obj_Free  (HPDF_MMgr    mmgr,
         HPDF_Obj_ForceFree (mmgr, obj);
 }
 
-
 void
 HPDF_Obj_ForceFree  (HPDF_MMgr    mmgr,
                      void         *obj)
@@ -106,6 +105,7 @@ HPDF_Obj_Write  (void          *obj,
     return HPDF_Obj_WriteValue(obj, stream, e);
 }
 
+
 HPDF_STATUS
 HPDF_Obj_WriteValue  (void          *obj,
                       HPDF_Stream   stream,
@@ -146,6 +146,9 @@ HPDF_Obj_WriteValue  (void          *obj,
         case HPDF_OCLASS_BOOLEAN:
             ret = HPDF_Boolean_Write (obj, stream);
             break;
+        case HPDF_OCLASS_REFERENCE:
+            ret = HPDF_Reference_Write (obj, stream, e);
+            break;
         case HPDF_OCLASS_NULL:
             ret = HPDF_Stream_WriteStr (stream, "null");
             break;
@@ -173,3 +176,40 @@ HPDF_Proxy_New  (HPDF_MMgr  mmgr,
     return p;
 }
 
+HPDF_Obj_Header*
+HPDF_Reference_New  (HPDF_MMgr  mmgr,
+                 void       *obj)
+{
+    HPDF_Obj_Header *ref = HPDF_GetMem (mmgr, sizeof(HPDF_Obj_Header));
+	HPDF_Obj_Header *header = obj;
+
+    HPDF_PTRACE((" HPDF_Reference_New\n"));
+
+    if (ref) {
+        HPDF_MemSet (ref, 0, sizeof(HPDF_Obj_Header));
+        ref->obj_class = HPDF_OCLASS_REFERENCE;
+		ref->obj_id = header->obj_id & 0x00FFFFFF;
+        ref->gen_no = header->gen_no;
+    }
+
+    return ref;
+}
+
+HPDF_STATUS
+HPDF_Reference_Write  (void          *obj,
+                 HPDF_Stream   stream)
+{
+    char buf[HPDF_SHORT_BUF_SIZ];
+    char *pbuf = buf;
+    char *eptr = buf + HPDF_SHORT_BUF_SIZ - 1;
+    HPDF_Obj_Header *ref = obj;
+
+    HPDF_PTRACE((" HPDF_Reference_Write\n"));
+
+    pbuf = HPDF_IToA (pbuf, ref->obj_id & 0x00FFFFFF, eptr);
+    *pbuf++ = ' ';
+    pbuf = HPDF_IToA (pbuf, ref->gen_no, eptr);
+    HPDF_StrCpy(pbuf, " R", eptr);
+
+    return HPDF_Stream_WriteStr(stream, buf);
+}
