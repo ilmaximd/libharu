@@ -1861,13 +1861,17 @@ HPDF_Page_ExecuteXObject  (HPDF_Page     page,
     if (ret != HPDF_OK)
         return ret;
 
+	/*
     if (!obj || obj->header.obj_class != (HPDF_OSUBCLASS_XOBJECT |
             HPDF_OCLASS_DICT))
         return HPDF_RaiseError (page->error, HPDF_INVALID_OBJECT, 0);
-
+	*/
+    if (!obj)
+        return HPDF_RaiseError (page->error, HPDF_INVALID_OBJECT, 0);
+	/*
     if (page->mmgr != obj->mmgr)
         return HPDF_RaiseError (page->error, HPDF_PAGE_INVALID_XOBJECT, 0);
-
+	*/
     attr = (HPDF_PageAttr)page->attr;
     local_name = HPDF_Page_GetXObjectName (page, obj);
 

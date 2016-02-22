@@ -48,6 +48,7 @@ HPDF_Catalog_New  (HPDF_MMgr  mmgr,
 {
     HPDF_Catalog catalog;
     HPDF_STATUS ret = 0;
+    HPDF_Pages pages;
 
     catalog = HPDF_Dict_New (mmgr);
     if (!catalog)
@@ -55,12 +56,11 @@ HPDF_Catalog_New  (HPDF_MMgr  mmgr,
 
     catalog->header.obj_class |= HPDF_OSUBCLASS_CATALOG;
 
-    if (HPDF_Xref_Add (xref, catalog) != HPDF_OK)
+    if (HPDF_Xref_AddDeferred (xref, catalog) != HPDF_OK)
         return NULL;
 
     /* add requiered elements */
     ret += HPDF_Dict_AddName (catalog, "Type", "Catalog");
-    ret += HPDF_Dict_Add (catalog, "Pages", HPDF_Pages_New (mmgr, NULL, xref));
 
     if (ret != HPDF_OK)
         return NULL;
@@ -68,6 +68,11 @@ HPDF_Catalog_New  (HPDF_MMgr  mmgr,
     return catalog;
 }
 
+HPDF_STATUS
+HPDF_Catalog_SetPages  (HPDF_Catalog catalog, HPDF_Pages pages) {
+	void *refObj = HPDF_Reference_New(catalog->mmgr, pages);
+	return HPDF_Dict_Add (catalog, "Pages", refObj);
+}
 
 HPDF_Pages
 HPDF_Catalog_GetRoot  (HPDF_Catalog  catalog)
