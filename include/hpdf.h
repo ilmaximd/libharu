@@ -124,6 +124,9 @@ HPDF_EXPORT(HPDF_STATUS)
 HPDF_NewDoc  (HPDF_Doc  pdf);
 
 
+HPDF_STATUS
+HPDF_FinishDoc  (HPDF_Doc  pdf);
+
 HPDF_EXPORT(void)
 HPDF_FreeDoc  (HPDF_Doc  pdf);
 
@@ -138,6 +141,9 @@ HPDF_FreeDocAll  (HPDF_Doc  pdf);
 
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_SaveToStream  (HPDF_Doc   pdf);
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_FlushToStream  (HPDF_Doc   pdf);
 
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_GetContents   (HPDF_Doc   pdf,
@@ -156,6 +162,10 @@ HPDF_ReadFromStream  (HPDF_Doc       pdf,
 
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_ResetStream  (HPDF_Doc     pdf);
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_ClearStream  (HPDF_Doc     pdf);
 
 
 HPDF_EXPORT(HPDF_STATUS)

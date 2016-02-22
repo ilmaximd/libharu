@@ -34,6 +34,7 @@ extern "C" {
 #define  HPDF_OTYPE_INDIRECT          0x40000000
 #define  HPDF_OTYPE_ANY               (HPDF_OTYPE_DIRECT | HPDF_OTYPE_INDIRECT)
 #define  HPDF_OTYPE_HIDDEN            0x10000000
+#define  HPDF_OTYPE_DEFERRED          0x20000000
 
 #define  HPDF_OCLASS_UNKNOWN          0x0001
 #define  HPDF_OCLASS_NULL             0x0002
@@ -46,6 +47,7 @@ extern "C" {
 #define  HPDF_OCLASS_ARRAY            0x0010
 #define  HPDF_OCLASS_DICT             0x0011
 #define  HPDF_OCLASS_PROXY            0x0012
+#define  HPDF_OCLASS_REFERENCE        0x0013
 #define  HPDF_OCLASS_ANY              0x00FF
 
 #define  HPDF_OSUBCLASS_FONT          0x0100
@@ -61,7 +63,6 @@ extern "C" {
 #define  HPDF_OSUBCLASS_EXT_GSTATE_R  0x0B00  /* read only object */
 #define  HPDF_OSUBCLASS_NAMEDICT      0x0C00
 #define  HPDF_OSUBCLASS_NAMETREE      0x0D00
-
 
 
 /*----------------------------------------------------------------------------*/
@@ -103,6 +104,9 @@ HPDF_Obj_Write  (void          *obj,
                  HPDF_Stream   stream,
                  HPDF_Encrypt  e);
 
+HPDF_STATUS
+HPDF_Reference_Write  (void          *obj,
+                 HPDF_Stream   stream);
 
 void
 HPDF_Obj_Free  (HPDF_MMgr    mmgr,
@@ -523,6 +527,14 @@ HPDF_Proxy_New  (HPDF_MMgr  mmgr,
                  void       *obj);
 
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_ProxyObject ----------------------------------------------------*/
+
+
+HPDF_Obj_Header*
+HPDF_Reference_New  (HPDF_MMgr  mmgr,
+                 void       *obj);
+
 
 /*---------------------------------------------------------------------------*/
 /*----- HPDF_Xref -----------------------------------------------------------*/
@@ -541,10 +553,13 @@ typedef struct _HPDF_Xref_Rec {
       HPDF_MMgr    mmgr;
       HPDF_Error   error;
       HPDF_UINT32  start_offset;
+      HPDF_UINT32  start_index;
       HPDF_List    entries;
+      HPDF_List    deferredEntries;
       HPDF_UINT    addr;
       HPDF_Xref    prev;
       HPDF_Dict    trailer;
+      HPDF_Encrypt encript;
 } HPDF_Xref_Rec;
 
 
@@ -562,13 +577,28 @@ HPDF_Xref_Add  (HPDF_Xref  xref,
                 void       *obj);
 
 
+HPDF_STATUS
+HPDF_Xref_AddDeferred  (HPDF_Xref  xref,
+                void       *obj);
+
+
+HPDF_STATUS
+HPDF_Xref_CompleteDeferred  (HPDF_Xref  xref,
+                void       *obj);
+
+
 HPDF_XrefEntry
 HPDF_Xref_GetEntry  (HPDF_Xref  xref,
                      HPDF_UINT  index);
 
 
 HPDF_STATUS
-HPDF_Xref_WriteToStream  (HPDF_Xref     xref,
+HPDF_Xref_WriteEntriesToStream  (HPDF_Xref     xref,
+                          HPDF_Stream   stream);
+
+
+HPDF_STATUS
+HPDF_Xref_WriteCrossTableToStream  (HPDF_Xref     xref,
                           HPDF_Stream   stream,
                           HPDF_Encrypt  e);
 

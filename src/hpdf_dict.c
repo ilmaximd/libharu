@@ -238,8 +238,7 @@ HPDF_Dict_Write  (HPDF_Dict     dict,
         HPDF_Number length;
 
         /* get "length" element */
-        length = (HPDF_Number)HPDF_Dict_GetItem (dict, "Length",
-                HPDF_OCLASS_NUMBER);
+        length = (HPDF_Number)HPDF_Dict_GetItem (dict, "Length", HPDF_OCLASS_NUMBER);
         if (!length)
             return HPDF_SetError (dict->error,
                     HPDF_DICT_STREAM_LENGTH_NOT_FOUND, 0);

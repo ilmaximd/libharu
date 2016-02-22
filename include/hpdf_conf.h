@@ -68,6 +68,9 @@
 /* default array size of page-list-tablef */
 #define HPDF_DEF_PAGE_LIST_NUM      256
 
+/* default array size of deferred-pages */
+#define HPDF_DEF_DEFERR_PAGES_NUM   10
+
 /* default array size of range-table of cid-fontdef */
 #define HPDF_DEF_RANGE_TBL_NUM      128
 

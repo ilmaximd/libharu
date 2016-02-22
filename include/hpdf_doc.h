@@ -36,14 +36,19 @@ extern "C" {
 typedef struct _HPDF_Doc_Rec {
     HPDF_UINT32     sig_bytes;
     HPDF_PDFVer     pdf_version;
+    HPDF_BOOL       writeStarted;
+    HPDF_BOOL       isFinished;
 
     HPDF_MMgr         mmgr;
     HPDF_Catalog      catalog;
     HPDF_Outline      outlines;
     HPDF_Xref         xref;
-    HPDF_Pages        root_pages;
+
     HPDF_Pages        cur_pages;
     HPDF_Page         cur_page;
+    HPDF_List         deferredPages;
+    HPDF_INT32        pagesLevel;
+
     HPDF_List         page_list;
     HPDF_Error_Rec    error;
     HPDF_Dict         info;
