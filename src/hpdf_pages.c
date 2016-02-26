@@ -142,8 +142,7 @@ HPDF_Pages_AddKids  (HPDF_Pages  parent,
     if (HPDF_Dict_GetItem (kid, "Parent", HPDF_OCLASS_DICT))
         return HPDF_SetError (parent->error, HPDF_PAGE_CANNOT_SET_PARENT, 0);
 
-    refObj = HPDF_Reference_New(parent->mmgr, parent);
-    if ((ret = HPDF_Dict_Add (kid, "Parent", refObj)) != HPDF_OK)
+    if ((ret = HPDF_Dict_Add (kid, "Parent", parent)) != HPDF_OK)
         return ret;
 
     kids = (HPDF_Array )HPDF_Dict_GetItem (parent, "Kids", HPDF_OCLASS_ARRAY);

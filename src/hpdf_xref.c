@@ -49,6 +49,8 @@ HPDF_Xref_New  (HPDF_MMgr     mmgr,
         goto Fail;
 
     xref->deferredEntries = HPDF_List_New (mmgr, 100);
+    if (!xref->deferredEntries)
+        goto Fail;
 
     xref->addr = 0;
 
@@ -114,6 +116,9 @@ HPDF_Xref_Free  (HPDF_Xref  xref)
 
             HPDF_List_Free(xref->entries);
         }
+
+        if (xref->deferredEntries)
+            HPDF_List_Free(xref->deferredEntries);
 
         if (xref->trailer)
             HPDF_Dict_Free (xref->trailer);

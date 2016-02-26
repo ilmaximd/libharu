@@ -278,6 +278,7 @@ HPDF_NewDoc  (HPDF_Doc  pdf)
 HPDF_EXPORT(void)
 HPDF_FreeDoc  (HPDF_Doc  pdf)
 {
+    HPDF_INT32 index;
     HPDF_PTRACE ((" HPDF_FreeDoc\n"));
 
     if (HPDF_Doc_Validate (pdf)) {
@@ -312,6 +313,16 @@ HPDF_FreeDoc  (HPDF_Doc  pdf)
         if (pdf->page_list) {
             HPDF_List_Free (pdf->page_list);
             pdf->page_list = NULL;
+        }
+
+        if (pdf->deferredPages) {
+            for(index = 0; index < pdf->deferredPages->count; index++)
+            {
+                HPDF_List pagesList = HPDF_List_ItemAt(pdf->deferredPages, index);
+                HPDF_List_Free (pagesList);
+            }
+            HPDF_List_Free (pdf->deferredPages);
+            pdf->deferredPages = NULL;
         }
 
         pdf->encrypt_dict = NULL;
