@@ -353,7 +353,8 @@ HPDF_Dict_Add  (HPDF_Dict        dict,
         proxy->header.obj_id |= HPDF_OTYPE_DIRECT;
     } else {
         element->value = obj;
-        header->obj_id |= HPDF_OTYPE_DIRECT;
+        if (!(header->obj_class & HPDF_OSUBCLASS_IMMORTAL))
+            header->obj_id |= HPDF_OTYPE_DIRECT;
     }
 
     return ret;

@@ -32,7 +32,7 @@ HPDF_Obj_Free  (HPDF_MMgr    mmgr,
 
     header = (HPDF_Obj_Header *)obj;
 
-    if (!(header->obj_id & HPDF_OTYPE_INDIRECT))
+    if (!(header->obj_id & HPDF_OTYPE_INDIRECT) && !(header->obj_class & HPDF_OSUBCLASS_IMMORTAL))
         HPDF_Obj_ForceFree (mmgr, obj);
 }
 
@@ -181,14 +181,14 @@ HPDF_Reference_New  (HPDF_MMgr  mmgr,
                  void       *obj)
 {
     HPDF_Obj_Header *ref = HPDF_GetMem (mmgr, sizeof(HPDF_Obj_Header));
-	HPDF_Obj_Header *header = obj;
+    HPDF_Obj_Header *header = obj;
 
     HPDF_PTRACE((" HPDF_Reference_New\n"));
 
     if (ref) {
         HPDF_MemSet (ref, 0, sizeof(HPDF_Obj_Header));
         ref->obj_class = HPDF_OCLASS_REFERENCE;
-		ref->obj_id = header->obj_id & 0x00FFFFFF;
+        ref->obj_id = header->obj_id & 0x00FFFFFF;
         ref->gen_no = header->gen_no;
     }
 
