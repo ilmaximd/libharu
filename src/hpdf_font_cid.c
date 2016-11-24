@@ -588,7 +588,7 @@ CIDFontType2_BeforeWrite_Func  (HPDF_Dict obj)
             ret += HPDF_Dict_AddNumber (font_data, "Length2", 0);
             ret += HPDF_Dict_AddNumber (font_data, "Length3", 0);
 
-            font_data->filter = obj->filter;
+            //font_data->filter = obj->filter;
 
             if (ret != HPDF_OK)
                 return HPDF_Error_GetCode (obj->error);

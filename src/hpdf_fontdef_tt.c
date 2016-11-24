@@ -2091,6 +2091,7 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
     }
 
     /* recalcurate checksum */
+
     for (i = 0; i < HPDF_REQUIRED_TAGS_COUNT; i++) {
         HPDF_TTFTable tbl = tmp_tbl[i];
         HPDF_UINT32 buf;
@@ -2099,32 +2100,8 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
         HPDF_PTRACE((" SaveFontData() tag[%s] length=%u\n",
                 REQUIRED_TAGS[i], length));
 
-        if ((ret = HPDF_Stream_Seek (tmp_stream, tbl.offset, HPDF_SEEK_SET))
-                != HPDF_OK)
-            break;
-
-        tbl.check_sum = 0;
-        while (length > 0) {
-            HPDF_UINT rlen = (length > 4) ? 4 : length;
-            buf = 0;
-            if ((ret = HPDF_Stream_Read (tmp_stream, (HPDF_BYTE *)&buf, &rlen))
-                    != HPDF_OK)
-                break;
-
-            UINT32Swap (&buf);
-            tbl.check_sum += buf;
-            length -= rlen;
-        }
-
-        if (ret != HPDF_OK)
-            break;
-
-        HPDF_PTRACE((" SaveFontData tag[%s] check-sum=%u offset=%u\n",
-                    REQUIRED_TAGS[i], (HPDF_UINT)tbl.check_sum,
-                    (HPDF_UINT)tbl.offset));
-
         ret += HPDF_Stream_Write (stream, (HPDF_BYTE *)REQUIRED_TAGS[i], 4);
-        ret += WriteUINT32 (stream, tbl.check_sum);
+        ret += WriteUINT32 (stream, 0);
         tbl.offset += offset_base;
         ret += WriteUINT32 (stream, tbl.offset);
         ret += WriteUINT32 (stream, tbl.length);
@@ -2133,36 +2110,11 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
             break;
     }
 
-    if (ret != HPDF_OK)
-        goto Exit;
-
-    /* calucurate checkSumAdjustment.*/
-    ret = HPDF_Stream_Seek (tmp_stream, 0, HPDF_SEEK_SET);
-    if (ret != HPDF_OK)
-        goto Exit;
-
-    for (;;) {
-        HPDF_UINT32 buf;
-        HPDF_UINT siz = sizeof(buf);
-
-        ret = HPDF_Stream_Read (tmp_stream, (HPDF_BYTE *)&buf, &siz);
-        if (ret != HPDF_OK || siz <= 0) {
-            if (ret == HPDF_STREAM_EOF)
-                ret = HPDF_OK;
-            break;
-        }
-
-        UINT32Swap (&buf);
-        tmp_check_sum -= buf;
-    }
-
-    if (ret != HPDF_OK)
+	if (ret != HPDF_OK)
         goto Exit;
 
     HPDF_PTRACE((" SaveFontData new checkSumAdjustment=%u\n",
                 (HPDF_UINT)tmp_check_sum));
-
-    UINT32Swap (&tmp_check_sum);
 
     ret = HPDF_Stream_Seek (tmp_stream, check_sum_ptr, HPDF_SEEK_SET);
     if (ret == HPDF_OK) {
