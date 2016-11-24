@@ -64,6 +64,8 @@ extern "C" {
 #define  HPDF_OSUBCLASS_NAMEDICT      0x0C00
 #define  HPDF_OSUBCLASS_NAMETREE      0x0D00
 
+#define  HPDF_OSUBCLASS_IMMORTAL      0x0E00
+
 
 /*----------------------------------------------------------------------------*/
 /*------ Values related xref -------------------------------------------------*/

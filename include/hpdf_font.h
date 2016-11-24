@@ -107,6 +107,28 @@ HPDF_Type0Font_New  (HPDF_MMgr        mmgr,
 HPDF_BOOL
 HPDF_Font_Validate  (HPDF_Font font);
 
+/*----------------------------------------------------------------------------*/
+/*----- API for caching cid font info ----------------------------------------*/
+
+typedef struct {
+    HPDF_Array w_array;
+    HPDF_UNICODE *gidMap;
+    HPDF_UINT16 gidMapSize;
+    HPDF_BOOL taken;
+} CID_FONT_INFO;
+
+typedef CID_FONT_INFO*(*GetCIDFontInfoFunc)(HPDF_FontAttr);
+
+void
+CIDFontInfo_Free(HPDF_MMgr mmgr, CID_FONT_INFO *font);
+
+void
+GetCIDFontInfo_SetFunc(GetCIDFontInfoFunc func);
+
+CID_FONT_INFO*
+CIDFontInfo_New(HPDF_MMgr mmgr, HPDF_FontAttr attr);
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
