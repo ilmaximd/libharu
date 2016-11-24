@@ -586,7 +586,7 @@ HPDF_Stream_WriteToStreamWithDeflate  (HPDF_Stream  src,
     strm.next_out = otbuf;
     strm.avail_out = DEFLATE_BUF_SIZ;
 
-    ret = deflateInit_(&strm, Z_DEFAULT_COMPRESSION, ZLIB_VERSION,
+    ret = deflateInit_(&strm, Z_BEST_SPEED, ZLIB_VERSION,
             sizeof(z_stream));
     if (ret != Z_OK)
         return HPDF_SetError (src->error, HPDF_ZLIB_ERROR, ret);

@@ -450,6 +450,11 @@ HPDF_Dict
 HPDF_Dict_New  (HPDF_MMgr  mmgr);
 
 
+HPDF_DictElement
+HPDF_Dict_GetElement(HPDF_Dict   dict,
+                     const char  *key);
+
+
 HPDF_Dict
 HPDF_DictStream_New  (HPDF_MMgr  mmgr,
                       HPDF_Xref  xref);

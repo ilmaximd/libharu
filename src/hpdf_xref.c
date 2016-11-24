@@ -318,7 +318,8 @@ static void FreeEntryObjects(HPDF_MMgr mmgr, HPDF_List objects, HPDF_INT32 start
         if(header->obj_id & HPDF_OTYPE_DEFERRED) continue;
 
         if (entry->obj) {
-            HPDF_Obj_ForceFree (mmgr, entry->obj);
+			if (!(header->obj_class & HPDF_OSUBCLASS_FONT) && !(header->obj_class & HPDF_OSUBCLASS_IMMORTAL))
+	            HPDF_Obj_ForceFree (mmgr, entry->obj);
             entry->obj = NULL;
         }
     }

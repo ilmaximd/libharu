@@ -19,9 +19,6 @@
 #include "hpdf_utils.h"
 #include "hpdf_objects.h"
 
-HPDF_DictElement
-GetElement  (HPDF_Dict      dict,
-             const char    *key);
 
 /*--------------------------------------------------------------------------*/
 
@@ -311,7 +308,7 @@ HPDF_Dict_Add  (HPDF_Dict        dict,
     }
 
     /* check whether there is an object which has same name */
-    element = GetElement (dict, key);
+	element = HPDF_Dict_GetElement(dict, key);
 
     if (element) {
         HPDF_Obj_Free (dict->mmgr, element->value);
@@ -421,7 +418,7 @@ HPDF_Dict_GetItem  (HPDF_Dict        dict,
                     const char  *key,
                     HPDF_UINT16      obj_class)
 {
-    HPDF_DictElement element = GetElement (dict, key);
+	HPDF_DictElement element = HPDF_Dict_GetElement(dict, key);
     void *obj;
 
     if (element && HPDF_StrCmp(key, element->key) == 0) {
@@ -450,7 +447,7 @@ HPDF_Dict_GetItem  (HPDF_Dict        dict,
 
 
 HPDF_DictElement
-GetElement  (HPDF_Dict        dict,
+HPDF_Dict_GetElement(HPDF_Dict        dict,
              const char  *key)
 {
     HPDF_UINT i;
