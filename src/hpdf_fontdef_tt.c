@@ -1981,7 +1981,6 @@ WriteHeader (HPDF_FontDef   fontdef,
     return HPDF_OK;
 }
 
-
 HPDF_STATUS
 HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
                               HPDF_Stream    stream)
@@ -2072,20 +2071,16 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
         } else if (HPDF_MemCmp ((HPDF_BYTE *)tbl->tag, (HPDF_BYTE *)"name", 4) == 0) {
             ret = RecreateName (fontdef, tmp_stream);
         } else {
-            HPDF_UINT size = 4;
+            HPDF_UINT size = HPDF_STREAM_BUF_SIZ;
+            HPDF_BYTE data[HPDF_STREAM_BUF_SIZ];
 
-            while (length > 4) {
+            while (length > 0) {
                 value = 0;
-                size = 4;
-                ret = HPDF_Stream_Read (attr->stream, (HPDF_BYTE *)&value, &size);
-                ret += HPDF_Stream_Write (tmp_stream, (HPDF_BYTE *)&value, size);
-                length -= 4;
+                size = length < size ? length : size;
+                ret = HPDF_Stream_Read (attr->stream, data, &size);
+                ret += HPDF_Stream_Write (tmp_stream, data, size);
+                length -= size;
             }
-
-            value = 0;
-            size = length;
-            ret += HPDF_Stream_Read (attr->stream, (HPDF_BYTE *)&value, &size);
-            ret += HPDF_Stream_Write (tmp_stream, (HPDF_BYTE *)&value, size);
         }
 
         tmp_tbl[i].offset = new_offset;

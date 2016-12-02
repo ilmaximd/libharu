@@ -81,6 +81,8 @@ HPDF_DictStream_New  (HPDF_MMgr  mmgr,
     if (!obj->stream)
         return NULL;
 
+	obj->compressed = HPDF_FALSE;
+
     return obj;
 }
 
@@ -258,9 +260,11 @@ HPDF_Dict_Write  (HPDF_Dict     dict,
         if (e)
             HPDF_Encrypt_Reset (e);
 
-        if ((ret = HPDF_Stream_WriteToStream (dict->stream, stream,
-                        dict->filter, e)) != HPDF_OK)
-            return ret;
+        ret = dict->compressed
+            ? HPDF_Stream_WriteToStream(dict->stream, stream, HPDF_STREAM_FILTER_NONE, NULL)
+            : HPDF_Stream_WriteToStream(dict->stream, stream, dict->filter, e);
+
+        if (ret != HPDF_OK) return ret;
 
         HPDF_Number_SetValue (length, stream->size - strptr);
 
@@ -353,7 +357,8 @@ HPDF_Dict_Add  (HPDF_Dict        dict,
         proxy->header.obj_id |= HPDF_OTYPE_DIRECT;
     } else {
         element->value = obj;
-        header->obj_id |= HPDF_OTYPE_DIRECT;
+        if (!(header->obj_class & HPDF_OSUBCLASS_IMMORTAL))
+            header->obj_id |= HPDF_OTYPE_DIRECT;
     }
 
     return ret;

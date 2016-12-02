@@ -64,6 +64,8 @@ extern "C" {
 #define  HPDF_OSUBCLASS_NAMEDICT      0x0C00
 #define  HPDF_OSUBCLASS_NAMETREE      0x0D00
 
+#define  HPDF_OSUBCLASS_IMMORTAL      0x0E00
+
 
 /*----------------------------------------------------------------------------*/
 /*------ Values related xref -------------------------------------------------*/
@@ -430,6 +432,7 @@ typedef struct _HPDF_Dict_Rec {
     HPDF_Dict_AfterWriteFunc   after_write_fn;
     HPDF_Dict_FreeFunc         free_fn;
     HPDF_Stream                stream;
+    HPDF_BOOL                  compressed;
     HPDF_UINT                  filter;
     HPDF_Dict                  filterParams;
     void                       *attr;
