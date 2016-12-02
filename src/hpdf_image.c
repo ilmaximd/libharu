@@ -387,7 +387,7 @@ HPDF_Image_LoadRawImageFromMem  (HPDF_MMgr          mmgr,
             != HPDF_OK)
         return NULL;
 
-    if (HPDF_Stream_Write (image->stream, buf, size) != HPDF_OK)
+    if (buf && HPDF_Stream_Write(image->stream, buf, size) != HPDF_OK)
         return NULL;
 
     return image;

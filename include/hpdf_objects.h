@@ -432,6 +432,7 @@ typedef struct _HPDF_Dict_Rec {
     HPDF_Dict_AfterWriteFunc   after_write_fn;
     HPDF_Dict_FreeFunc         free_fn;
     HPDF_Stream                stream;
+    HPDF_BOOL                  compressed;
     HPDF_UINT                  filter;
     HPDF_Dict                  filterParams;
     void                       *attr;

@@ -2071,15 +2071,15 @@ HPDF_TTFontDef_SaveFontData  (HPDF_FontDef   fontdef,
         } else if (HPDF_MemCmp ((HPDF_BYTE *)tbl->tag, (HPDF_BYTE *)"name", 4) == 0) {
             ret = RecreateName (fontdef, tmp_stream);
         } else {
-			HPDF_UINT size = HPDF_STREAM_BUF_SIZ;
-			HPDF_BYTE data[HPDF_STREAM_BUF_SIZ];
+            HPDF_UINT size = HPDF_STREAM_BUF_SIZ;
+            HPDF_BYTE data[HPDF_STREAM_BUF_SIZ];
 
-			while (length > 0) {
+            while (length > 0) {
                 value = 0;
-				size = length < size ? length : size;
+                size = length < size ? length : size;
                 ret = HPDF_Stream_Read (attr->stream, data, &size);
                 ret += HPDF_Stream_Write (tmp_stream, data, size);
-				length -= size;
+                length -= size;
             }
         }
 
